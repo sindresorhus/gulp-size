@@ -5,7 +5,6 @@ var filesize = require('filesize');
 
 module.exports = function (options) {
 	options = options || {};
-	options = options.showFiles === undefined ? false : options.showFiles;
 
 	var totalSize = 0;
 
@@ -17,7 +16,7 @@ module.exports = function (options) {
 		var size = file.contents.length;
 		totalSize += size;
 
-		if (options.showFiles) {
+		if (options.showFiles === true) {
 			gutil.log('gulp-size: ' + gutil.colors.blue(file.relative) + ' ' + filesize(size));
 		}
 

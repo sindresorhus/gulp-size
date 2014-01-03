@@ -5,12 +5,12 @@ var size = require('./index');
 var out = process.stdout.write.bind(process.stdout);
 
 it('should limit the size of a module', function (cb) {
-	var stream = size();
+	var stream = size({showFiles: true});
 
 	process.stdout.write = function (str) {
 		out(str);
 
-		if (/1\.23 kB/.test(str)) {
+		if (/total/.test(str)) {
 			assert(true);
 			process.stdout.write = out;
 			cb();
