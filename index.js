@@ -5,7 +5,7 @@ var filesize = require('filesize');
 
 module.exports = function (options) {
 	options = options || {};
-	options = options.showFiles === undefined ? false : options.showFiles;
+	options.showFiles === undefined ? false : options.showFiles;
 
 	var totalSize = 0;
 
