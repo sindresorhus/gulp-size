@@ -1,0 +1,37 @@
+{
+  "name": "gulp-size",
+  "version": "0.0.0",
+  "description": "Display the size of your project",
+  "license": "MIT",
+  "repository": "sindresorhus/gulp-size",
+  "author": {
+    "name": "Sindre Sorhus",
+    "email": "sindresorhus@gmail.com",
+    "url": "http://sindresorhus.com"
+  },
+  "engines": {
+    "node": ">=0.10.0"
+  },
+  "scripts": {
+    "test": "mocha"
+  },
+  "files": [
+    "index.js"
+  ],
+  "keywords": [
+    "gulpplugin",
+    "file",
+    "size",
+    "log",
+    "measure",
+    "inspect"
+  ],
+  "dependencies": {
+    "gulp-util": "~2.2.0",
+    "map-stream": "0.0.4",
+    "filesize": "~2.0.0"
+  },
+  "devDependencies": {
+    "mocha": "*"
+  }
+}
