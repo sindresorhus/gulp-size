@@ -1,6 +1,6 @@
 'use strict';
 var gutil = require('gulp-util');
-var map = require('map-stream');
+var through = require('through2');
 var filesize = require('filesize');
 
 module.exports = function (options) {
@@ -8,9 +8,15 @@ module.exports = function (options) {
 
 	var totalSize = 0;
 
-	var stream = map(function (file, cb) {
+	return through.obj(function (file, enc, cb) {
 		if (file.isNull()) {
-			return cb(null, file);
+			this.push(file);
+			return cb();
+		}
+
+		if (file.isStream()) {
+			this.emit('error', new gutil.PluginError('gulp-size', 'Streaming not supported'));
+			return cb();
 		}
 
 		var size = file.contents.length;
@@ -20,12 +26,10 @@ module.exports = function (options) {
 			gutil.log('gulp-size: ' + gutil.colors.blue(file.relative) + ' ' + filesize(size));
 		}
 
-		cb(null, file);
-	});
-
-	stream.on('end', function () {
+		this.push(file);
+		cb();
+	}, function (cb) {
 		gutil.log('gulp-size: ' + gutil.colors.green('total ') + filesize(totalSize));
+		cb();
 	});
-
-	return stream;
 };

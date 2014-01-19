@@ -28,7 +28,7 @@
   ],
   "dependencies": {
     "gulp-util": "~2.2.0",
-    "map-stream": "0.0.4",
+    "through2": "~0.4.0",
     "filesize": "~2.0.0"
   },
   "devDependencies": {
