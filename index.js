@@ -1,7 +1,7 @@
 'use strict';
 var gutil = require('gulp-util');
 var through = require('through2');
-var filesize = require('filesize');
+var prettyBytes = require('pretty-bytes');
 
 module.exports = function (options) {
 	options = options || {};
@@ -23,13 +23,13 @@ module.exports = function (options) {
 		totalSize += size;
 
 		if (options.showFiles === true) {
-			gutil.log('gulp-size: ' + gutil.colors.blue(file.relative) + ' ' + filesize(size));
+			gutil.log('gulp-size: ' + gutil.colors.blue(file.relative) + ' ' + prettyBytes(size));
 		}
 
 		this.push(file);
 		cb();
 	}, function (cb) {
-		gutil.log('gulp-size: ' + gutil.colors.green('total ') + filesize(totalSize));
+		gutil.log('gulp-size: ' + gutil.colors.green('total ') + prettyBytes(totalSize));
 		cb();
 	});
 };

@@ -20,6 +20,7 @@
   ],
   "keywords": [
     "gulpplugin",
+    "filesize",
     "file",
     "size",
     "log",
@@ -29,7 +30,7 @@
   "dependencies": {
     "gulp-util": "~2.2.0",
     "through2": "~0.4.0",
-    "filesize": "~2.0.0"
+    "pretty-bytes": "~0.1.0"
   },
   "devDependencies": {
     "mocha": "*"
