@@ -23,7 +23,7 @@ module.exports = function (options) {
 		totalSize += size;
 
 		if (options.showFiles === true) {
-			gutil.log('gulp-size: ' + gutil.colors.blue(file.relative) + ' ' + prettyBytes(size));
+			gutil.log('gulp-size: ' + gutil.colors.yellow(file.relative) + ' ' + prettyBytes(size));
 		}
 
 		this.push(file);
