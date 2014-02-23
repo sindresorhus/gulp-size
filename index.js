@@ -6,6 +6,10 @@ var prettyBytes = require('pretty-bytes');
 module.exports = function (options) {
 	options = options || {};
 
+	if (typeof options.showTotal === 'undefined' || options.showTotal === null) {
+		options.showTotal = true;
+	}
+
 	var totalSize = 0;
 
 	return through.obj(function (file, enc, cb) {
@@ -29,7 +33,10 @@ module.exports = function (options) {
 		this.push(file);
 		cb();
 	}, function (cb) {
-		gutil.log('gulp-size: ' + gutil.colors.green('total ') + prettyBytes(totalSize));
+		if (options.showTotal === true) {
+			gutil.log('gulp-size: ' + gutil.colors.green('total ') + prettyBytes(totalSize));
+		}
+
 		cb();
 	});
 };
