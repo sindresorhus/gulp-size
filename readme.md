@@ -43,6 +43,12 @@ Default: `false`
 
 Displays the size of every file instead of just the total size.
 
+##### showTotal
+
+Type: `Boolean`  
+Default: `true`
+
+Displays the total size of the stream.
 
 ## License
 
