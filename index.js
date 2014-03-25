@@ -5,6 +5,8 @@ var prettyBytes = require('pretty-bytes');
 
 module.exports = function (options) {
 	options = options || {};
+	//set default value to show total size
+	options.showTotal = typeof options.showTotal !== 'undefined' ? options.showTotal : true;
 
 	var totalSize = 0;
 
@@ -29,7 +31,9 @@ module.exports = function (options) {
 		this.push(file);
 		cb();
 	}, function (cb) {
-		gutil.log('gulp-size: ' + gutil.colors.green('total ') + prettyBytes(totalSize));
+		if (options.showTotal) {
+			gutil.log('gulp-size: ' + gutil.colors.green('total ') + prettyBytes(totalSize));
+		}
 		cb();
 	});
 };
