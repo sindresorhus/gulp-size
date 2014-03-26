@@ -25,12 +25,14 @@
     "size",
     "log",
     "measure",
-    "inspect"
+    "inspect",
+    "debug"
   ],
   "dependencies": {
-    "gulp-util": "~2.2.0",
-    "through2": "~0.4.0",
-    "pretty-bytes": "~0.1.0"
+    "chalk": "^0.4.0",
+    "gulp-util": "^2.2.0",
+    "pretty-bytes": "^0.1.0",
+    "through2": "^0.4.0"
   },
   "devDependencies": {
     "mocha": "*"

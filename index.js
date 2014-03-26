@@ -2,6 +2,7 @@
 var gutil = require('gulp-util');
 var through = require('through2');
 var prettyBytes = require('pretty-bytes');
+var chalk = require('chalk');
 
 module.exports = function (options) {
 	options = options || {};
@@ -24,7 +25,7 @@ module.exports = function (options) {
 		totalSize += size;
 
 		if (options.showFiles === true) {
-			gutil.log('gulp-size: ' + gutil.colors.blue(file.relative) + ' ' + prettyBytes(size));
+			gutil.log('gulp-size: ' + chalk.blue(file.relative) + ' ' + prettyBytes(size));
 		}
 
 		fileCount++;
@@ -35,7 +36,7 @@ module.exports = function (options) {
 			return cb();
 		}
 
-		gutil.log('gulp-size: ' + gutil.colors.green('total ') + prettyBytes(totalSize));
+		gutil.log('gulp-size: ' + chalk.green('total ') + prettyBytes(totalSize));
 		cb();
 	});
 };
