@@ -7,6 +7,7 @@ module.exports = function (options) {
 	options = options || {};
 
 	var totalSize = 0;
+	var fileCount = 0;
 
 	return through.obj(function (file, enc, cb) {
 		if (file.isNull()) {
@@ -26,9 +27,14 @@ module.exports = function (options) {
 			gutil.log('gulp-size: ' + gutil.colors.blue(file.relative) + ' ' + prettyBytes(size));
 		}
 
+		fileCount++;
 		this.push(file);
 		cb();
 	}, function (cb) {
+		if (fileCount === 1 && options.showFiles === true) {
+			return cb();
+		}
+
 		gutil.log('gulp-size: ' + gutil.colors.green('total ') + prettyBytes(totalSize));
 		cb();
 	});
