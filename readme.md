@@ -41,6 +41,13 @@ Default: `false`
 
 Displays the size of every file instead of just the total size.
 
+##### title
+
+Type: `string`  
+Default: ''
+
+Give it a title so it's possible to distinguish the output of multiple instances logging at once.
+
 
 ## License
 
