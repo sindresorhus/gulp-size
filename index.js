@@ -36,8 +36,11 @@ module.exports = function (options) {
 		if (fileCount === 1 && options.showFiles === true) {
 			return cb();
 		}
-
-		gutil.log('gulp-size: ' + title + chalk.green('total ') + prettyBytes(totalSize));
+		
+		if (options.showTotal !== false){
+			gutil.log('gulp-size: ' + title + chalk.green('total ') + prettyBytes(totalSize));	
+		}
+		
 		cb();
 	});
 };
