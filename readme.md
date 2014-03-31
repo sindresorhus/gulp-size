@@ -41,6 +41,13 @@ Default: `false`
 
 Displays the size of every file instead of just the total size.
 
+##### showTotal
+
+Type: `boolean`  
+Default: `true`
+
+Hide display of the total size.
+
 ##### title
 
 Type: `string`  
