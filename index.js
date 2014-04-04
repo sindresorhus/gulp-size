@@ -12,6 +12,11 @@ module.exports = function (options) {
 	var fileCount = 0;
 	var title = options.title ? options.title + ' ' : '';
 
+	function writeLog(title, what, size) {
+		gutil.log('gulp-size: ' + title + what + ' ' + prettyBytes(size) +
+			(options.gzip ? chalk.gray(' (gzipped)') : ''));
+	};
+
 	return through.obj(function (file, enc, cb) {
 		if (file.isNull()) {
 			this.push(file);
@@ -44,9 +49,4 @@ module.exports = function (options) {
 		writeLog(title, chalk.green('total'), totalSize, options.gzip);
 		cb();
 	});
-};
-
-function writeLog(title, what, size, gzip) {
-	gutil.log('gulp-size: ' + title + what + ' ' + prettyBytes(size) + ' ' +
-		(gzip ? 'gzipped' : ''));
 };
