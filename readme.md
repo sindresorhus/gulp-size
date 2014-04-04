@@ -41,6 +41,14 @@ Default: `false`
 
 Displays the size of every file instead of just the total size.
 
+##### gzip
+
+Type: `boolean`  
+Default: `false`
+
+Displays the gzipped size.
+
+
 ##### title
 
 Type: `string`  

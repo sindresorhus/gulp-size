@@ -1,8 +1,9 @@
 'use strict';
-var gutil = require('gulp-util');
-var through = require('through2');
-var prettyBytes = require('pretty-bytes');
 var chalk = require('chalk');
+var gutil = require('gulp-util');
+var gzipSync = require('zlib-browserify').gzipSync;
+var prettyBytes = require('pretty-bytes');
+var through = require('through2');
 
 module.exports = function (options) {
 	options = options || {};
@@ -22,11 +23,14 @@ module.exports = function (options) {
 			return cb();
 		}
 
-		var size = file.contents.length;
+		var size = options.gzip
+			? gzipSync(file.contents).length
+			: file.contents.length;
+
 		totalSize += size;
 
 		if (options.showFiles === true) {
-			gutil.log('gulp-size: ' + title + chalk.blue(file.relative) + ' ' + prettyBytes(size));
+			writeLog(title, chalk.blue(file.relative), size, options.gzip);
 		}
 
 		fileCount++;
@@ -37,7 +41,12 @@ module.exports = function (options) {
 			return cb();
 		}
 
-		gutil.log('gulp-size: ' + title + chalk.green('total ') + prettyBytes(totalSize));
+		writeLog(title, chalk.green('total'), totalSize, options.gzip);
 		cb();
 	});
+};
+
+function writeLog(title, what, size, gzip) {
+	gutil.log('gulp-size: ' + title + what + ' ' + prettyBytes(size) + ' ' +
+		(gzip ? 'gzipped' : ''));
 };
