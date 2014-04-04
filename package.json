@@ -26,14 +26,15 @@
     "log",
     "measure",
     "inspect",
-    "debug"
+    "debug",
+    "gzip"
   ],
   "dependencies": {
     "chalk": "^0.4.0",
     "gulp-util": "^2.2.0",
+    "gzip-size": "^0.1.0",
     "pretty-bytes": "^0.1.0",
-    "through2": "^0.4.0",
-    "zlib-browserify": "0.0.3"
+    "through2": "^0.4.0"
   },
   "devDependencies": {
     "mocha": "*"

@@ -1,9 +1,14 @@
 'use strict';
-var chalk = require('chalk');
 var gutil = require('gulp-util');
-var gzipSync = require('zlib-browserify').gzipSync;
-var prettyBytes = require('pretty-bytes');
 var through = require('through2');
+var chalk = require('chalk');
+var prettyBytes = require('pretty-bytes');
+var gzipSize = require('gzip-size');
+
+function log(title, what, size, gzip) {
+	gutil.log('gulp-size: ' + title + what + ' ' + prettyBytes(size) +
+		(gzip ? chalk.gray(' (gzipped)') : ''));
+};
 
 module.exports = function (options) {
 	options = options || {};
@@ -11,11 +16,6 @@ module.exports = function (options) {
 	var totalSize = 0;
 	var fileCount = 0;
 	var title = options.title ? options.title + ' ' : '';
-
-	function writeLog(title, what, size) {
-		gutil.log('gulp-size: ' + title + what + ' ' + prettyBytes(size) +
-			(options.gzip ? chalk.gray(' (gzipped)') : ''));
-	};
 
 	return through.obj(function (file, enc, cb) {
 		if (file.isNull()) {
@@ -28,25 +28,29 @@ module.exports = function (options) {
 			return cb();
 		}
 
-		var size = options.gzip
-			? gzipSync(file.contents).length
-			: file.contents.length;
+		var finish = function (err, size) {
+			totalSize += size;
 
-		totalSize += size;
+			if (options.showFiles === true) {
+				log(title, chalk.blue(file.relative), size, options.gzip);
+			}
 
-		if (options.showFiles === true) {
-			writeLog(title, chalk.blue(file.relative), size, options.gzip);
+			fileCount++;
+			this.push(file);
+			cb();
+		}.bind(this);
+
+		if (options.gzip) {
+			gzipSize(file.contents, finish);
+		} else {
+			finish(null, file.contents.length);
 		}
-
-		fileCount++;
-		this.push(file);
-		cb();
 	}, function (cb) {
 		if (fileCount === 1 && options.showFiles === true) {
 			return cb();
 		}
 
-		writeLog(title, chalk.green('total'), totalSize, options.gzip);
+		log(title, chalk.green('total'), totalSize, options.gzip);
 		cb();
 	});
 };

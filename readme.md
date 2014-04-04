@@ -46,8 +46,7 @@ Displays the size of every file instead of just the total size.
 Type: `boolean`  
 Default: `false`
 
-Displays the gzipped size.
-
+Displays the gzipped size instead.
 
 ##### title
 

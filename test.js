@@ -58,3 +58,25 @@ it('should not show total when `showFiles` is enabled and only one file', functi
 
 	stream.end();
 });
+
+it('should have `gzip` option', function (cb) {
+	var out = process.stdout.write.bind(process.stdout);
+	var stream = size({gzip: true});
+
+	process.stdout.write = function (str) {
+		out(str);
+
+		if (/gzipped/.test(str)) {
+			assert(true);
+			process.stdout.write = out;
+			cb();
+		}
+	};
+
+	stream.write(new gutil.File({
+		path: __dirname + '/fixture.js',
+		contents: new Buffer('unicorn world')
+	}));
+
+	stream.end();
+});
