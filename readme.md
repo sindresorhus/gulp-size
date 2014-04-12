@@ -21,7 +21,7 @@ var gulp = require('gulp');
 var size = require('gulp-size');
 
 gulp.task('default', function () {
-	gulp.src('fixture.js')
+	return gulp.src('fixture.js')
 		.pipe(size())
 		.pipe(gulp.dest('dist'));
 });
