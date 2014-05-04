@@ -31,7 +31,7 @@ module.exports = function (options) {
 		var finish = function (err, size) {
 			totalSize += size;
 
-			if (options.showFiles === true) {
+			if (options.showFiles === true && size > 0) {
 				log(title, chalk.blue(file.relative), size, options.gzip);
 			}
 
@@ -46,7 +46,7 @@ module.exports = function (options) {
 			finish(null, file.contents.length);
 		}
 	}, function (cb) {
-		if (fileCount === 1 && options.showFiles === true) {
+		if (fileCount === 1 && options.showFiles === true && totalSize > 0) {
 			return cb();
 		}
 

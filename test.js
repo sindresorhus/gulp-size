@@ -10,7 +10,11 @@ it('should show the size of files in the stream', function (cb) {
 	process.stdout.write = function (str) {
 		out(str);
 
-		if (/fixture\.js/.test(str)) {
+		if (/0 B/.test(str)) {
+			assert(false, 'should not show files of size 0 B');
+		}
+
+		if (/fixture2\.js/.test(str)) {
 			assert(true);
 			process.stdout.write = out;
 			cb();
@@ -19,11 +23,16 @@ it('should show the size of files in the stream', function (cb) {
 
 	stream.write(new gutil.File({
 		path: __dirname + '/fixture.js',
-		contents: new Buffer(1234)
+		contents: new Buffer(0)
 	}));
 
 	stream.write(new gutil.File({
 		path: __dirname + '/fixture2.js',
+		contents: new Buffer(1234)
+	}));
+
+	stream.write(new gutil.File({
+		path: __dirname + '/fixture3.js',
 		contents: new Buffer(1234)
 	}));
 
