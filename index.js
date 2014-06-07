@@ -6,16 +6,16 @@ var prettyBytes = require('pretty-bytes');
 var gzipSize = require('gzip-size');
 
 function log(title, what, size, gzip) {
-	gutil.log('gulp-size: ' + title + what + ' ' + prettyBytes(size) +
+	title = title ? ('\'' + chalk.cyan(title) + '\' ') : '';
+	gutil.log('gulp-size: ' + title + what + ' ' + chalk.magenta(prettyBytes(size)) +
 		(gzip ? chalk.gray(' (gzipped)') : ''));
-};
+}
 
 module.exports = function (options) {
 	options = options || {};
 
 	var totalSize = 0;
 	var fileCount = 0;
-	var title = options.title ? options.title + ' ' : '';
 
 	return through.obj(function (file, enc, cb) {
 		if (file.isNull()) {
@@ -32,7 +32,7 @@ module.exports = function (options) {
 			totalSize += size;
 
 			if (options.showFiles === true && size > 0) {
-				log(title, chalk.blue(file.relative), size, options.gzip);
+				log(options.title, chalk.blue(file.relative), size, options.gzip);
 			}
 
 			fileCount++;
@@ -50,7 +50,7 @@ module.exports = function (options) {
 			return cb();
 		}
 
-		log(title, chalk.green('total'), totalSize, options.gzip);
+		log(options.title, chalk.green('total'), totalSize, options.gzip);
 		cb();
 	});
 };

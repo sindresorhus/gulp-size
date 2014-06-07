@@ -5,7 +5,7 @@ var size = require('./index');
 
 it('should show the size of files in the stream', function (cb) {
 	var out = process.stdout.write.bind(process.stdout);
-	var stream = size({showFiles: true});
+	var stream = size({showFiles: true, title: 'test'});
 
 	process.stdout.write = function (str) {
 		out(str);
