@@ -7,12 +7,17 @@ var gzipSize = require('gzip-size');
 
 function log(title, what, size, gzip) {
 	title = title ? ('\'' + chalk.cyan(title) + '\' ') : '';
+	what = (what === 'total') ? chalk.green(what) : chalk.blue(what);
 	gutil.log('gulp-size: ' + title + what + ' ' + chalk.magenta(prettyBytes(size)) +
 		(gzip ? chalk.gray(' (gzipped)') : ''));
 }
 
 module.exports = function (options) {
 	options = options || {};
+
+	if (options.log) {
+		log = options.log;
+	}
 
 	var totalSize = 0;
 	var fileCount = 0;
@@ -32,7 +37,7 @@ module.exports = function (options) {
 			totalSize += size;
 
 			if (options.showFiles === true && size > 0) {
-				log(options.title, chalk.blue(file.relative), size, options.gzip);
+				log(options.title, file.relative, size, options.gzip);
 			}
 
 			fileCount++;
@@ -50,7 +55,7 @@ module.exports = function (options) {
 			return cb();
 		}
 
-		log(options.title, chalk.green('total'), totalSize, options.gzip);
+		log(options.title, 'total', totalSize, options.gzip);
 		cb();
 	});
 };

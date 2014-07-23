@@ -55,6 +55,19 @@ Default: ''
 
 Give it a title so it's possible to distinguish the output of multiple instances logging at once.
 
+##### log
+
+Type: `function`
+
+Customize log info if you want.
+
+```js
+gulp.size({
+  log: function(title, what, size, gzip) {
+    console.log(title, what, size, gzip);
+  }
+})
+```
 
 ## License
 
