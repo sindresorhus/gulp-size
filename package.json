@@ -30,11 +30,11 @@
     "gzip"
   ],
   "dependencies": {
-    "chalk": "^0.4.0",
-    "gulp-util": "^2.2.0",
+    "chalk": "^0.5.1",
+    "gulp-util": "^3.0.0",
     "gzip-size": "^0.2.0",
     "pretty-bytes": "^0.1.0",
-    "through2": "^0.4.0"
+    "through2": "^0.5.1"
   },
   "devDependencies": {
     "mocha": "*"
