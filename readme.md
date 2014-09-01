@@ -2,7 +2,7 @@
 
 > Display the size of your project
 
-<img src="screenshot" width="341">
+<img src="screenshot.png" width="341">
 
 Logs out the total size of files in the stream and optionally the individual file-sizes.
 
