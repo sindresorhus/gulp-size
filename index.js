@@ -7,7 +7,7 @@ var gzipSize = require('gzip-size');
 
 function log(title, what, size, gzip) {
 	title = title ? ('\'' + chalk.cyan(title) + '\' ') : '';
-	gutil.log('gulp-size: ' + title + what + ' ' + chalk.magenta(prettyBytes(size)) +
+	gutil.log(title + what + ' ' + chalk.magenta(prettyBytes(size)) +
 		(gzip ? chalk.gray(' (gzipped)') : ''));
 }
 
@@ -50,7 +50,7 @@ module.exports = function (options) {
 			return cb();
 		}
 
-		log(options.title, chalk.green('total'), totalSize, options.gzip);
+		log(options.title, chalk.green('all files'), totalSize, options.gzip);
 		cb();
 	});
 };
