@@ -2,14 +2,14 @@
 
 > Display the size of your project
 
-![](screenshot.png)
+<img src="screenshot" width="341">
 
 Logs out the total size of files in the stream and optionally the individual file-sizes.
 
 
 ## Install
 
-```bash
+```sh
 $ npm install --save-dev gulp-size
 ```
 
@@ -58,4 +58,4 @@ Give it a title so it's possible to distinguish the output of multiple instances
 
 ## License
 
-[MIT](http://opensource.org/licenses/MIT) © [Sindre Sorhus](http://sindresorhus.com)
+MIT © [Sindre Sorhus](http://sindresorhus.com)
