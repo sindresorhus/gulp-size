@@ -19,13 +19,13 @@ module.exports = function (options) {
 
 	return through.obj(function (file, enc, cb) {
 		if (file.isNull()) {
-			this.push(file);
-			return cb();
+			cb(null, file);
+			return;
 		}
 
 		if (file.isStream()) {
-			this.emit('error', new gutil.PluginError('gulp-size', 'Streaming not supported'));
-			return cb();
+			cb(new gutil.PluginError('gulp-size', 'Streaming not supported'));
+			return;
 		}
 
 		var finish = function (err, size) {
@@ -36,9 +36,8 @@ module.exports = function (options) {
 			}
 
 			fileCount++;
-			this.push(file);
-			cb();
-		}.bind(this);
+			cb(null, file);
+		};
 
 		if (options.gzip) {
 			gzipSize(file.contents, finish);
@@ -47,7 +46,8 @@ module.exports = function (options) {
 		}
 	}, function (cb) {
 		if (fileCount === 1 && options.showFiles === true && totalSize > 0) {
-			return cb();
+			cb();
+			return;
 		}
 
 		log(options.title, chalk.green('all files'), totalSize, options.gzip);

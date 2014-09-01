@@ -1,7 +1,7 @@
 'use strict';
 var assert = require('assert');
 var gutil = require('gulp-util');
-var size = require('./index');
+var size = require('./');
 
 it('should show the size of files in the stream', function (cb) {
 	var out = process.stdout.write.bind(process.stdout);
