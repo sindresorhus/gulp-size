@@ -55,6 +55,39 @@ Default: ''
 
 Give it a title so it's possible to distinguish the output of multiple instances logging at once.
 
+### size.size
+
+Type: `number`  
+Example: `12423000`
+
+The total size of all files in bytes.
+
+### size.prettySize
+
+Type: `string`  
+Example: `'14 kB'`
+
+Prettified version of `.size`.
+
+Useful for eg. reporting the total size with [`gulp-notify`]():
+
+```js
+var gulp = require('gulp');
+var size = require('gulp-size');
+var notify = require('gulp-notify');
+
+gulp.task('default', function () {
+	var s = size();
+	return gulp.src('fixture.js')
+		.pipe(s)
+		.pipe(gulp.dest('dist'))
+		.pipe(notify({
+			onLast: true,
+			message: 'Total file size ' + s.prettySize
+		}));
+});
+```
+
 
 ## License
 

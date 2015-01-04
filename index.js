@@ -45,6 +45,9 @@ module.exports = function (options) {
 			finish(null, file.contents.length);
 		}
 	}, function (cb) {
+		this.size = totalSize;
+		this.prettySize = prettyBytes(totalSize);
+
 		if (fileCount === 1 && options.showFiles === true && totalSize > 0) {
 			cb();
 			return;

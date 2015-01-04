@@ -89,3 +89,20 @@ it('should have `gzip` option', function (cb) {
 
 	stream.end();
 });
+
+it('should expose the total size', function (cb) {
+	var stream = size();
+
+	stream.on('finish', function () {
+		assert.strictEqual(stream.size, 13);
+		assert.strictEqual(stream.prettySize, '13 B');
+		cb();
+	});
+
+	stream.write(new gutil.File({
+		path: __dirname + '/fixture.js',
+		contents: new Buffer('unicorn world')
+	}));
+
+	stream.end();
+});
