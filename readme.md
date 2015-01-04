@@ -69,7 +69,7 @@ Example: `'14 kB'`
 
 Prettified version of `.size`.
 
-Useful for eg. reporting the total size with [`gulp-notify`]():
+Useful for eg. reporting the total project size with [`gulp-notify`](https://github.com/mikaelbr/gulp-notify):
 
 ```js
 var gulp = require('gulp');
@@ -83,7 +83,9 @@ gulp.task('default', function () {
 		.pipe(gulp.dest('dist'))
 		.pipe(notify({
 			onLast: true,
-			message: 'Total file size ' + s.prettySize
+			message: function () {
+				return 'Total size ' + s.prettySize;
+			}
 		}));
 });
 ```
