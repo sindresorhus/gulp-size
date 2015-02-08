@@ -1,4 +1,4 @@
-# [gulp](http://gulpjs.com)-size [![Build Status](https://travis-ci.org/sindresorhus/gulp-size.svg?branch=master)](https://travis-ci.org/sindresorhus/gulp-size)
+# gulp-size [![Build Status](https://travis-ci.org/sindresorhus/gulp-size.svg?branch=master)](https://travis-ci.org/sindresorhus/gulp-size)
 
 > Display the size of your project
 
@@ -9,7 +9,7 @@ Logs out the total size of files in the stream and optionally the individual fil
 
 ## Install
 
-```sh
+```
 $ npm install --save-dev gulp-size
 ```
 
