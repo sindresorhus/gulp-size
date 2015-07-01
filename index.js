@@ -48,12 +48,10 @@ module.exports = function (options) {
 		this.size = totalSize;
 		this.prettySize = prettyBytes(totalSize);
 
-		if (fileCount === 1 && options.showFiles === true && totalSize > 0) {
-			cb();
-			return;
+		if (!(fileCount === 1 && options.showFiles) && totalSize > 0 && fileCount > 0) {
+			log(options.title, chalk.green('all files'), totalSize, options.gzip);
 		}
 
-		log(options.title, chalk.green('all files'), totalSize, options.gzip);
 		cb();
 	});
 };
