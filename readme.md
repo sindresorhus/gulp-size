@@ -55,6 +55,44 @@ Default: ''
 
 Give it a title so it's possible to distinguish the output of multiple instances logging at once.
 
+### options.colors
+
+#### singleFile
+
+Type: `string`
+Example: `'blue'` (default)
+
+Chalk based color coding for single file names
+
+#### allFiles
+
+Type: `allFiles`
+Example: `'green'` (default)
+
+Chalk based color coding for file summaries
+
+#### size
+
+Type: `string`
+Example: `'magenta'` (default)
+
+Chalk based color coding for file sizes
+
+#### title
+
+Type: `string`
+Example: `'cyan'` (default)
+
+Chalk based color coding for custom titles
+
+#### gzip
+
+Type: `string`
+Example: `'gray'` (default)
+
+Chalk based color coding for gzip suffix
+
+
 ### size.size
 
 Type: `number`  
@@ -87,6 +125,25 @@ gulp.task('default', function () {
 				return 'Total size ' + s.prettySize;
 			}
 		}));
+});
+```
+
+### size.colors
+
+Aforementioned colors can be set globally by modifying `size.colors`. Local configuration takes precedence over global configuration.
+
+```js
+var gulp = require('gulp');
+var size = require('gulp-size');
+
+size.colors.singleFile = 'cyan';
+
+gulp.task('default', function() {
+
+	return gulp.src('main.js')
+		.pipe(size( { title: 'MAIN FILE', colors : { title : 'red' } } ))
+		.pipe(gulp.dest('public'));
+
 });
 ```
 

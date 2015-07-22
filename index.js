@@ -4,15 +4,32 @@ var through = require('through2');
 var chalk = require('chalk');
 var prettyBytes = require('pretty-bytes');
 var gzipSize = require('gzip-size');
+var merge = require('merge');
 
-function log(title, what, size, gzip) {
-	title = title ? ('\'' + chalk.cyan(title) + '\' ') : '';
-	gutil.log(title + what + ' ' + chalk.magenta(prettyBytes(size)) +
-		(gzip ? chalk.gray(' (gzipped)') : ''));
+function log(colors, title, what, size, gzip) {
+	title = title ? ('\'' + chalk[colors.title](title) + '\' ') : '';
+	gutil.log(title + what + ' ' + chalk[colors.size](prettyBytes(size)) +
+		(gzip ? chalk[colors.gzip](' (gzipped)') : ''));
 }
 
-module.exports = function (options) {
+gulpSize.colors = {
+	singleFile : "blue",
+	allFiles : "green",
+	size : "magenta",
+	title : "cyan",
+	gzip :  "gray"
+};
+
+function gulpSize(options) {
 	options = options || {};
+	options.colors = merge(gulpSize.colors, options.colors);
+
+	// fail fast
+	Object.keys(options.colors).forEach(function(val) {
+		if (typeof chalk[options.colors[val]] !== 'function') {
+			throw new gutil.PluginError('gulp-size', '"'+options.colors[val] + '" is not a valid color in the chalk library (used in colors.' + val +')');
+		}
+	});
 
 	var totalSize = 0;
 	var fileCount = 0;
@@ -32,7 +49,7 @@ module.exports = function (options) {
 			totalSize += size;
 
 			if (options.showFiles === true && size > 0) {
-				log(options.title, chalk.blue(file.relative), size, options.gzip);
+				log(options.colors, options.title, chalk[options.colors.singleFile](file.relative), size, options.gzip);
 			}
 
 			fileCount++;
@@ -49,9 +66,12 @@ module.exports = function (options) {
 		this.prettySize = prettyBytes(totalSize);
 
 		if (!(fileCount === 1 && options.showFiles) && totalSize > 0 && fileCount > 0) {
-			log(options.title, chalk.green('all files'), totalSize, options.gzip);
+			log(options.colors, options.title, chalk[options.colors.allFiles]('all files'), totalSize, options.gzip);
 		}
 
 		cb();
 	});
-};
+}
+
+
+module.exports = gulpSize;
