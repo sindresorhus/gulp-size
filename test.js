@@ -90,6 +90,28 @@ it('should have `gzip` option', function (cb) {
 	stream.end();
 });
 
+it('should not show prettified size when `pretty` option is false', function (cb) {
+	var out = process.stdout.write.bind(process.stdout);
+	var stream = size({pretty: false});
+
+	process.stdout.write = function (str) {
+		out(str);
+
+		if (/1234 B/.test(str)) {
+			assert(true);
+			process.stdout.write = out;
+			cb();
+		}
+	};
+
+	stream.write(new gutil.File({
+		path: __dirname + '/fixture.js',
+		contents: new Buffer(1234)
+	}));
+
+	stream.end();
+});
+
 it('should expose the total size', function (cb) {
 	var stream = size();
 
