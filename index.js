@@ -6,7 +6,7 @@ var prettyBytes = require('pretty-bytes');
 var gzipSize = require('gzip-size');
 
 function log(title, what, size, gzip) {
-	title = title ? ('\'' + chalk.cyan(title) + '\' ') : '';
+	title = title ? chalk.cyan(title) : '';
 	gutil.log(title + what + ' ' + chalk.magenta(prettyBytes(size)) +
 		(gzip ? chalk.gray(' (gzipped)') : ''));
 }
