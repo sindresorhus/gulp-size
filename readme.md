@@ -30,7 +30,7 @@ gulp.task('default', function () {
 
 ## API
 
-### size(options)
+### size([options])
 
 #### options
 
@@ -57,10 +57,10 @@ Give it a title so it's possible to distinguish the output of multiple instances
 
 ##### pretty
 
-Type: `boolean`
+Type: `boolean`  
 Default: true
 
-Displays prettified size: 1337 B → 1.34.
+Displays prettified size: `1337 B` → `1.34 kB`.
 
 ### size.size
 
