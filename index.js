@@ -5,17 +5,19 @@ var chalk = require('chalk');
 var prettyBytes = require('pretty-bytes');
 var gzipSize = require('gzip-size');
 
-function log(title, what, size, gzip) {
-	title = title ? ('\'' + chalk.cyan(title) + '\' ') : '';
-	gutil.log(title + what + ' ' + chalk.magenta(prettyBytes(size)) +
-		(gzip ? chalk.gray(' (gzipped)') : ''));
-}
-
 module.exports = function (options) {
 	options = options || {};
+	options.pretty = options.pretty || options.pretty === undefined;
 
 	var totalSize = 0;
 	var fileCount = 0;
+
+	function log(what, size) {
+		var title = options.title;
+		title = title ? ('\'' + chalk.cyan(title) + '\' ') : '';
+		size = options.pretty ? prettyBytes(size) : (size + ' B');
+		gutil.log(title + what + ' ' + chalk.magenta(size) + (options.gzip ? chalk.gray(' (gzipped)') : ''));
+	}
 
 	return through.obj(function (file, enc, cb) {
 		if (file.isNull()) {
@@ -32,7 +34,7 @@ module.exports = function (options) {
 			totalSize += size;
 
 			if (options.showFiles === true && size > 0) {
-				log(options.title, chalk.blue(file.relative), size, options.gzip);
+				log(chalk.blue(file.relative), size);
 			}
 
 			fileCount++;
@@ -49,7 +51,7 @@ module.exports = function (options) {
 		this.prettySize = prettyBytes(totalSize);
 
 		if (!(fileCount === 1 && options.showFiles) && totalSize > 0 && fileCount > 0) {
-			log(options.title, chalk.green('all files'), totalSize, options.gzip);
+			log(chalk.green('all files'), totalSize);
 		}
 
 		cb();
