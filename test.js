@@ -2,6 +2,7 @@
 var assert = require('assert');
 var gutil = require('gulp-util');
 var size = require('./');
+var through = require('through2');
 
 it('should show the size of files in the stream', function (cb) {
 	var out = process.stdout.write.bind(process.stdout);
@@ -125,6 +126,46 @@ it('should expose the total size', function (cb) {
 		path: __dirname + '/fixture.js',
 		contents: new Buffer('unicorn world')
 	}));
+
+	stream.end();
+});
+
+it('should handle stream contents', function (cb) {
+	var contents = through();
+	var stream = size();
+
+	stream.on('finish', function () {
+		assert.strictEqual(stream.size, 100);
+		assert.strictEqual(stream.prettySize, '100 B');
+		cb();
+	});
+
+	stream.write(new gutil.File({
+		path: __dirname + '/fixture.js',
+		contents: contents
+	}));
+
+	contents.end(new Buffer(100));
+
+	stream.end();
+});
+
+it('should handle stream contents with `gzip` option', function (cb) {
+	var contents = through();
+	var stream = size({gzip: true});
+
+	stream.on('finish', function () {
+		assert.strictEqual(stream.size, 33);
+		assert.strictEqual(stream.prettySize, '33 B');
+		cb();
+	});
+
+	stream.write(new gutil.File({
+		path: __dirname + '/fixture.js',
+		contents: contents
+	}));
+
+	contents.end(new Buffer('unicorn world'));
 
 	stream.end();
 });

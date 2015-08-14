@@ -3,6 +3,7 @@ var gutil = require('gulp-util');
 var through = require('through2');
 var chalk = require('chalk');
 var prettyBytes = require('pretty-bytes');
+var StreamCounter = require('stream-counter');
 var gzipSize = require('gzip-size');
 
 module.exports = function (opts) {
@@ -24,11 +25,6 @@ module.exports = function (opts) {
 			return;
 		}
 
-		if (file.isStream()) {
-			cb(new gutil.PluginError('gulp-size', 'Streaming not supported'));
-			return;
-		}
-
 		var finish = function (err, size) {
 			if (err) {
 				cb(new gutil.PluginError('gulp-size', err));
@@ -44,6 +40,23 @@ module.exports = function (opts) {
 			fileCount++;
 			cb(null, file);
 		};
+
+		if (file.isStream()) {
+			if (opts.gzip) {
+				file.contents.pipe(gzipSize.stream())
+					.on('error', finish)
+					.on('end', function () {
+						finish(null, this.gzipSize);
+					});
+			} else {
+				file.contents.pipe(new StreamCounter())
+					.on('error', finish)
+					.on('finish', function () {
+						finish(null, this.bytes);
+					});
+			}
+			return;
+		}
 
 		if (opts.gzip) {
 			gzipSize(file.contents, finish);
