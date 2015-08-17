@@ -32,7 +32,7 @@
   "dependencies": {
     "chalk": "^1.0.0",
     "gulp-util": "^3.0.0",
-    "gzip-size": "^2.0.0",
+    "gzip-size": "^3.0.0",
     "pretty-bytes": "^2.0.1",
     "stream-counter": "^1.0.0",
     "through2": "^2.0.0"
