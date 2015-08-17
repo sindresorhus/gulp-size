@@ -13,7 +13,7 @@
     "node": ">=0.12.0"
   },
   "scripts": {
-    "test": "mocha"
+    "test": "xo && mocha"
   },
   "files": [
     "index.js"
@@ -38,6 +38,13 @@
     "through2": "^2.0.0"
   },
   "devDependencies": {
-    "mocha": "*"
+    "mocha": "*",
+    "xo": "*"
+  },
+  "xo": {
+    "env": [
+      "node",
+      "mocha"
+    ]
   }
 }

@@ -55,6 +55,7 @@ module.exports = function (opts) {
 						finish(null, this.bytes);
 					});
 			}
+
 			return;
 		}
 

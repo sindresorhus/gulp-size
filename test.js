@@ -1,8 +1,9 @@
 'use strict';
+var path = require('path');
 var assert = require('assert');
 var gutil = require('gulp-util');
-var size = require('./');
 var through = require('through2');
+var size = require('./');
 
 it('should show the size of files in the stream', function (cb) {
 	var out = process.stdout.write.bind(process.stdout);
@@ -23,17 +24,17 @@ it('should show the size of files in the stream', function (cb) {
 	};
 
 	stream.write(new gutil.File({
-		path: __dirname + '/fixture.js',
+		path: path.join(__dirname, 'fixture.js'),
 		contents: new Buffer(0)
 	}));
 
 	stream.write(new gutil.File({
-		path: __dirname + '/fixture2.js',
+		path: path.join(__dirname, 'fixture2.js'),
 		contents: new Buffer(1234)
 	}));
 
 	stream.write(new gutil.File({
-		path: __dirname + '/fixture3.js',
+		path: path.join(__dirname, 'fixture3.js'),
 		contents: new Buffer(1234)
 	}));
 
@@ -62,7 +63,7 @@ it('should not show total when `showFiles` is enabled and only one file', functi
 	});
 
 	stream.write(new gutil.File({
-		path: __dirname + '/fixture.js',
+		path: path.join(__dirname, 'fixture.js'),
 		contents: new Buffer(1234)
 	}));
 
@@ -84,7 +85,7 @@ it('should have `gzip` option', function (cb) {
 	};
 
 	stream.write(new gutil.File({
-		path: __dirname + '/fixture.js',
+		path: path.join(__dirname, 'fixture.js'),
 		contents: new Buffer('unicorn world')
 	}));
 
@@ -106,7 +107,7 @@ it('should not show prettified size when `pretty` option is false', function (cb
 	};
 
 	stream.write(new gutil.File({
-		path: __dirname + '/fixture.js',
+		path: path.join(__dirname, 'fixture.js'),
 		contents: new Buffer(1234)
 	}));
 
@@ -123,7 +124,7 @@ it('should expose the total size', function (cb) {
 	});
 
 	stream.write(new gutil.File({
-		path: __dirname + '/fixture.js',
+		path: path.join(__dirname, 'fixture.js'),
 		contents: new Buffer('unicorn world')
 	}));
 
@@ -141,7 +142,7 @@ it('should handle stream contents', function (cb) {
 	});
 
 	stream.write(new gutil.File({
-		path: __dirname + '/fixture.js',
+		path: path.join(__dirname, 'fixture.js'),
 		contents: contents
 	}));
 
@@ -161,7 +162,7 @@ it('should handle stream contents with `gzip` option', function (cb) {
 	});
 
 	stream.write(new gutil.File({
-		path: __dirname + '/fixture.js',
+		path: path.join(__dirname, 'fixture.js'),
 		contents: contents
 	}));
 
