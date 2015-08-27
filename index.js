@@ -16,7 +16,9 @@ module.exports = function (opts) {
 		var title = opts.title;
 		title = title ? chalk.cyan(title) + ' ' : '';
 		size = opts.pretty !== false ? prettyBytes(size) : (size + ' B');
-		gutil.log(title + what + ' ' + chalk.magenta(size) + (opts.gzip ? chalk.gray(' (gzipped)') : ''));
+		if (typeof opts.quiet === 'undefined' || !opts.quiet) {
+			gutil.log(title + what + ' ' + chalk.magenta(size) + (opts.gzip ? chalk.gray(' (gzipped)') : ''));
+		}
 	}
 
 	return through.obj(function (file, enc, cb) {
