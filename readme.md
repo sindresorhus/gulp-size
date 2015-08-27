@@ -36,42 +36,49 @@ gulp.task('default', function () {
 
 ##### showFiles
 
-Type: `boolean`  
+Type: `boolean`
 Default: `false`
 
 Displays the size of every file instead of just the total size.
 
 ##### gzip
 
-Type: `boolean`  
+Type: `boolean`
 Default: `false`
 
 Displays the gzipped size instead.
 
 ##### title
 
-Type: `string`  
+Type: `string`
 Default: ''
 
 Give it a title so it's possible to distinguish the output of multiple instances logging at once.
 
 ##### pretty
 
-Type: `boolean`  
+Type: `boolean`
 Default: true
 
 Displays prettified size: `1337 B` → `1.34 kB`.
 
+##### quiet
+
+Type: `boolean`
+Default: false
+
+Will only track size, you will be responsible for printing it.
+
 ### size.size
 
-Type: `number`  
+Type: `number`
 Example: `12423000`
 
 The total size of all files in bytes.
 
 ### size.prettySize
 
-Type: `string`  
+Type: `string`
 Example: `'14 kB'`
 
 Prettified version of `.size`.
