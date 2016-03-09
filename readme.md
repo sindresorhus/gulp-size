@@ -39,7 +39,8 @@ gulp.task('default', function () {
 Type: `boolean`  
 Default: `false`
 
-Displays the size of every file instead of just the total size.
+Displays the size of every file instead of just the total size (see also `showTotal`).
+
 
 ##### gzip
 
@@ -61,6 +62,13 @@ Type: `boolean`
 Default: true
 
 Displays prettified size: `1337 B` → `1.34 kB`.
+
+##### showTotal
+
+Type: `boolean`  
+Default: `true`
+
+Displays the total of all files. Useful, for example, if writing source files and source-map files in one operation.
 
 ### size.size
 
