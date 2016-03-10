@@ -5,9 +5,13 @@ var chalk = require('chalk');
 var prettyBytes = require('pretty-bytes');
 var StreamCounter = require('stream-counter');
 var gzipSize = require('gzip-size');
+var objectAssign = require('object-assign');
 
 module.exports = function (opts) {
-	opts = opts || {};
+	opts = objectAssign({
+		pretty: true,
+		showTotal: true
+	}, opts);
 
 	var totalSize = 0;
 	var fileCount = 0;
@@ -15,7 +19,7 @@ module.exports = function (opts) {
 	function log(what, size) {
 		var title = opts.title;
 		title = title ? chalk.cyan(title) + ' ' : '';
-		size = opts.pretty !== false ? prettyBytes(size) : (size + ' B');
+		size = opts.pretty ? prettyBytes(size) : (size + ' B');
 		gutil.log(title + what + ' ' + chalk.magenta(size) + (opts.gzip ? chalk.gray(' (gzipped)') : ''));
 	}
 
@@ -68,7 +72,7 @@ module.exports = function (opts) {
 		this.size = totalSize;
 		this.prettySize = prettyBytes(totalSize);
 
-		if (!(fileCount === 1 && opts.showFiles) && totalSize > 0 && fileCount > 0 && opts.showTotal !== false) {
+		if (!(fileCount === 1 && opts.showFiles) && totalSize > 0 && fileCount > 0 && opts.showTotal) {
 			log(chalk.green('all files'), totalSize);
 		}
 
