@@ -68,7 +68,7 @@ module.exports = function (opts) {
 		this.size = totalSize;
 		this.prettySize = prettyBytes(totalSize);
 
-		if (!(fileCount === 1 && opts.showFiles) && totalSize > 0 && fileCount > 0) {
+		if (!(fileCount === 1 && opts.showFiles) && totalSize > 0 && fileCount > 0 && opts.showTotal !== false) {
 			log(chalk.green('all files'), totalSize);
 		}
 
