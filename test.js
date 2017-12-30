@@ -1,13 +1,13 @@
 'use strict';
-var path = require('path');
-var assert = require('assert');
-var gutil = require('gulp-util');
-var through = require('through2');
-var size = require('./');
+const path = require('path');
+const assert = require('assert');
+const Vinyl = require('vinyl');
+const through = require('through2');
+const size = require('./');
 
-it('should show the size of files in the stream', function (cb) {
-	var out = process.stdout.write.bind(process.stdout);
-	var stream = size({showFiles: true, title: 'test'});
+it('should show the size of files in the stream', cb => {
+	const out = process.stdout.write.bind(process.stdout);
+	const stream = size({showFiles: true, title: 'test'});
 
 	process.stdout.write = function (str) {
 		out(str);
@@ -23,28 +23,28 @@ it('should show the size of files in the stream', function (cb) {
 		}
 	};
 
-	stream.write(new gutil.File({
+	stream.write(new Vinyl({
 		path: path.join(__dirname, 'fixture.js'),
-		contents: new Buffer(0)
+		contents: Buffer.alloc(0)
 	}));
 
-	stream.write(new gutil.File({
+	stream.write(new Vinyl({
 		path: path.join(__dirname, 'fixture2.js'),
-		contents: new Buffer(1234)
+		contents: Buffer.alloc(1234)
 	}));
 
-	stream.write(new gutil.File({
+	stream.write(new Vinyl({
 		path: path.join(__dirname, 'fixture3.js'),
-		contents: new Buffer(1234)
+		contents: Buffer.alloc(1234)
 	}));
 
 	stream.end();
 });
 
-it('should not show total when `showFiles` is enabled and only one file', function (cb) {
-	var out = process.stdout.write.bind(process.stdout);
-	var stream = size({showFiles: true});
-	var totalDetected = false;
+it('should not show total when `showFiles` is enabled and only one file', cb => {
+	const out = process.stdout.write.bind(process.stdout);
+	const stream = size({showFiles: true});
+	let totalDetected = false;
 
 	process.stdout.write = function (str) {
 		out(str);
@@ -54,25 +54,25 @@ it('should not show total when `showFiles` is enabled and only one file', functi
 		}
 	};
 
-	stream.on('data', function () {});
+	stream.on('data', () => {});
 
-	stream.on('end', function () {
+	stream.on('end', () => {
 		process.stdout.write = out;
 		assert(!totalDetected);
 		cb();
 	});
 
-	stream.write(new gutil.File({
+	stream.write(new Vinyl({
 		path: path.join(__dirname, 'fixture.js'),
-		contents: new Buffer(1234)
+		contents: Buffer.alloc(1234)
 	}));
 
 	stream.end();
 });
 
-it('should have `gzip` option', function (cb) {
-	var out = process.stdout.write.bind(process.stdout);
-	var stream = size({gzip: true});
+it('should have `gzip` option', cb => {
+	const out = process.stdout.write.bind(process.stdout);
+	const stream = size({gzip: true});
 
 	process.stdout.write = function (str) {
 		out(str);
@@ -84,17 +84,17 @@ it('should have `gzip` option', function (cb) {
 		}
 	};
 
-	stream.write(new gutil.File({
+	stream.write(new Vinyl({
 		path: path.join(__dirname, 'fixture.js'),
-		contents: new Buffer('unicorn world')
+		contents: Buffer.from('unicorn world')
 	}));
 
 	stream.end();
 });
 
-it('should not show prettified size when `pretty` option is false', function (cb) {
-	var out = process.stdout.write.bind(process.stdout);
-	var stream = size({pretty: false});
+it('should not show prettified size when `pretty` option is false', cb => {
+	const out = process.stdout.write.bind(process.stdout);
+	const stream = size({pretty: false});
 
 	process.stdout.write = function (str) {
 		out(str);
@@ -106,67 +106,67 @@ it('should not show prettified size when `pretty` option is false', function (cb
 		}
 	};
 
-	stream.write(new gutil.File({
+	stream.write(new Vinyl({
 		path: path.join(__dirname, 'fixture.js'),
-		contents: new Buffer(1234)
+		contents: Buffer.alloc(1234)
 	}));
 
 	stream.end();
 });
 
-it('should expose the total size', function (cb) {
-	var stream = size();
+it('should expose the total size', cb => {
+	const stream = size();
 
-	stream.on('finish', function () {
+	stream.on('finish', () => {
 		assert.strictEqual(stream.size, 13);
 		assert.strictEqual(stream.prettySize, '13 B');
 		cb();
 	});
 
-	stream.write(new gutil.File({
+	stream.write(new Vinyl({
 		path: path.join(__dirname, 'fixture.js'),
-		contents: new Buffer('unicorn world')
+		contents: Buffer.from('unicorn world')
 	}));
 
 	stream.end();
 });
 
-it('should handle stream contents', function (cb) {
-	var contents = through();
-	var stream = size();
+it('should handle stream contents', cb => {
+	const contents = through();
+	const stream = size();
 
-	stream.on('finish', function () {
+	stream.on('finish', () => {
 		assert.strictEqual(stream.size, 100);
 		assert.strictEqual(stream.prettySize, '100 B');
 		cb();
 	});
 
-	stream.write(new gutil.File({
+	stream.write(new Vinyl({
 		path: path.join(__dirname, 'fixture.js'),
-		contents: contents
+		contents
 	}));
 
-	contents.end(new Buffer(100));
+	contents.end(Buffer.alloc(100));
 
 	stream.end();
 });
 
-it('should handle stream contents with `gzip` option', function (cb) {
-	var contents = through();
-	var stream = size({gzip: true});
+it('should handle stream contents with `gzip` option', cb => {
+	const contents = through();
+	const stream = size({gzip: true});
 
-	stream.on('finish', function () {
+	stream.on('finish', () => {
 		assert.strictEqual(stream.size, 33);
 		assert.strictEqual(stream.prettySize, '33 B');
 		cb();
 	});
 
-	stream.write(new gutil.File({
+	stream.write(new Vinyl({
 		path: path.join(__dirname, 'fixture.js'),
-		contents: contents
+		contents
 	}));
 
-	contents.end(new Buffer('unicorn world'));
+	contents.end(Buffer.from('unicorn world'));
 
 	stream.end();
 });
