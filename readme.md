@@ -37,7 +37,7 @@ gulp.task('default', () =>
 ##### title
 
 Type: `string`<br>
-Default: ''
+Default: `''`
 
 Give it a title so it's possible to distinguish the output of multiple instances logging at once.
 
@@ -51,7 +51,7 @@ Displays the gzipped size instead.
 ##### pretty
 
 Type: `boolean`<br>
-Default: true
+Default: `true`
 
 Displays prettified size: `1337 B` → `1.34 kB`.
 
@@ -79,11 +79,11 @@ The total size of all files in bytes.
 ### size.prettySize
 
 Type: `string`<br>
-Example: `'14 kB'`
+Example: `14 kB`
 
 Prettified version of `.size`.
 
-Useful for eg. reporting the total project size with [`gulp-notify`](https://github.com/mikaelbr/gulp-notify):
+Useful for, for example, reporting the total project size with [`gulp-notify`](https://github.com/mikaelbr/gulp-notify):
 
 ```js
 const gulp = require('gulp');

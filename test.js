@@ -3,13 +3,13 @@ const path = require('path');
 const assert = require('assert');
 const Vinyl = require('vinyl');
 const through = require('through2');
-const size = require('./');
+const size = require('.');
 
 it('should show the size of files in the stream', cb => {
 	const out = process.stdout.write.bind(process.stdout);
 	const stream = size({showFiles: true, title: 'test'});
 
-	process.stdout.write = function (str) {
+	process.stdout.write = str => {
 		out(str);
 
 		if (/0 B/.test(str)) {
@@ -46,7 +46,7 @@ it('should not show total when `showFiles` is enabled and only one file', cb => 
 	const stream = size({showFiles: true});
 	let totalDetected = false;
 
-	process.stdout.write = function (str) {
+	process.stdout.write = str => {
 		out(str);
 
 		if (/total/.test(str)) {
@@ -74,7 +74,7 @@ it('should have `gzip` option', cb => {
 	const out = process.stdout.write.bind(process.stdout);
 	const stream = size({gzip: true});
 
-	process.stdout.write = function (str) {
+	process.stdout.write = str => {
 		out(str);
 
 		if (/gzipped/.test(str)) {
@@ -96,7 +96,7 @@ it('should not show prettified size when `pretty` option is false', cb => {
 	const out = process.stdout.write.bind(process.stdout);
 	const stream = size({pretty: false});
 
-	process.stdout.write = function (str) {
+	process.stdout.write = str => {
 		out(str);
 
 		if (/1234 B/.test(str)) {

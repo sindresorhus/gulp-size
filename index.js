@@ -6,10 +6,9 @@ const chalk = require('chalk');
 const prettyBytes = require('pretty-bytes');
 const StreamCounter = require('stream-counter');
 const gzipSize = require('gzip-size');
-const objectAssign = require('object-assign');
 
 module.exports = opts => {
-	opts = objectAssign({
+	opts = Object.assign({
 		pretty: true,
 		showTotal: true
 	}, opts);
@@ -30,7 +29,7 @@ module.exports = opts => {
 			return;
 		}
 
-		const finish = function (err, size) {
+		const finish = (err, size) => {
 			if (err) {
 				cb(new PluginError('gulp-size', err));
 				return;
@@ -65,7 +64,7 @@ module.exports = opts => {
 		}
 
 		if (opts.gzip) {
-			gzipSize(file.contents, finish);
+			gzipSize(file.contents).then(size => finish(null, size)).catch(finish);
 		} else {
 			finish(null, file.contents.length);
 		}
