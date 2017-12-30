@@ -1,37 +1,38 @@
 'use strict';
-var gutil = require('gulp-util');
-var through = require('through2');
-var chalk = require('chalk');
-var prettyBytes = require('pretty-bytes');
-var StreamCounter = require('stream-counter');
-var gzipSize = require('gzip-size');
-var objectAssign = require('object-assign');
+const fancyLog = require('fancy-log');
+const PluginError = require('plugin-error');
+const through = require('through2');
+const chalk = require('chalk');
+const prettyBytes = require('pretty-bytes');
+const StreamCounter = require('stream-counter');
+const gzipSize = require('gzip-size');
+const objectAssign = require('object-assign');
 
-module.exports = function (opts) {
+module.exports = opts => {
 	opts = objectAssign({
 		pretty: true,
 		showTotal: true
 	}, opts);
 
-	var totalSize = 0;
-	var fileCount = 0;
+	let totalSize = 0;
+	let fileCount = 0;
 
 	function log(what, size) {
-		var title = opts.title;
+		let title = opts.title;
 		title = title ? chalk.cyan(title) + ' ' : '';
 		size = opts.pretty ? prettyBytes(size) : (size + ' B');
-		gutil.log(title + what + ' ' + chalk.magenta(size) + (opts.gzip ? chalk.gray(' (gzipped)') : ''));
+		fancyLog(title + what + ' ' + chalk.magenta(size) + (opts.gzip ? chalk.gray(' (gzipped)') : ''));
 	}
 
-	return through.obj(function (file, enc, cb) {
+	return through.obj((file, enc, cb) => {
 		if (file.isNull()) {
 			cb(null, file);
 			return;
 		}
 
-		var finish = function (err, size) {
+		const finish = function (err, size) {
 			if (err) {
-				cb(new gutil.PluginError('gulp-size', err));
+				cb(new PluginError('gulp-size', err));
 				return;
 			}
 
