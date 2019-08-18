@@ -20,7 +20,7 @@ $ npm install --save-dev gulp-size
 const gulp = require('gulp');
 const size = require('gulp-size');
 
-gulp.task('default', () =>
+exports.default = () => (
 	gulp.src('fixture.js')
 		.pipe(size())
 		.pipe(gulp.dest('dist'))
@@ -30,9 +30,11 @@ gulp.task('default', () =>
 
 ## API
 
-### size([options])
+### size(options?)
 
 #### options
+
+Type: `object`
 
 ##### title
 
@@ -90,7 +92,7 @@ const gulp = require('gulp');
 const size = require('gulp-size');
 const notify = require('gulp-notify');
 
-gulp.task('default', () => {
+exports.default = () => {
 	const s = size();
 
 	return gulp.src('fixture.js')
@@ -100,10 +102,5 @@ gulp.task('default', () => {
 			onLast: true,
 			message: () => `Total size ${s.prettySize}`
 		}));
-});
+};
 ```
-
-
-## License
-
-MIT © [Sindre Sorhus](https://sindresorhus.com)

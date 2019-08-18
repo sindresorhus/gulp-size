@@ -5,21 +5,21 @@ const Vinyl = require('vinyl');
 const through = require('through2');
 const size = require('.');
 
-it('should show the size of files in the stream', cb => {
+it('should show the size of files in the stream', callback => {
 	const out = process.stdout.write.bind(process.stdout);
 	const stream = size({showFiles: true, title: 'test'});
 
-	process.stdout.write = str => {
-		out(str);
+	process.stdout.write = string => {
+		out(string);
 
-		if (/0 B/.test(str)) {
+		if (/0 B/.test(string)) {
 			assert(false, 'should not show files of size 0 B');
 		}
 
-		if (/fixture2\.js/.test(str)) {
+		if (/fixture2\.js/.test(string)) {
 			assert(true);
 			process.stdout.write = out;
-			cb();
+			callback();
 		}
 	};
 
@@ -41,15 +41,15 @@ it('should show the size of files in the stream', cb => {
 	stream.end();
 });
 
-it('should not show total when `showFiles` is enabled and only one file', cb => {
+it('should not show total when `showFiles` is enabled and only one file', callback => {
 	const out = process.stdout.write.bind(process.stdout);
 	const stream = size({showFiles: true});
 	let totalDetected = false;
 
-	process.stdout.write = str => {
-		out(str);
+	process.stdout.write = string => {
+		out(string);
 
-		if (/total/.test(str)) {
+		if (/total/.test(string)) {
 			totalDetected = true;
 		}
 	};
@@ -59,7 +59,7 @@ it('should not show total when `showFiles` is enabled and only one file', cb => 
 	stream.on('end', () => {
 		process.stdout.write = out;
 		assert(!totalDetected);
-		cb();
+		callback();
 	});
 
 	stream.write(new Vinyl({
@@ -70,17 +70,17 @@ it('should not show total when `showFiles` is enabled and only one file', cb => 
 	stream.end();
 });
 
-it('should have `gzip` option', cb => {
+it('should have `gzip` option', callback => {
 	const out = process.stdout.write.bind(process.stdout);
 	const stream = size({gzip: true});
 
-	process.stdout.write = str => {
-		out(str);
+	process.stdout.write = string => {
+		out(string);
 
-		if (/gzipped/.test(str)) {
+		if (/gzipped/.test(string)) {
 			assert(true);
 			process.stdout.write = out;
-			cb();
+			callback();
 		}
 	};
 
@@ -92,17 +92,17 @@ it('should have `gzip` option', cb => {
 	stream.end();
 });
 
-it('should not show prettified size when `pretty` option is false', cb => {
+it('should not show prettified size when `pretty` option is false', callback => {
 	const out = process.stdout.write.bind(process.stdout);
 	const stream = size({pretty: false});
 
-	process.stdout.write = str => {
-		out(str);
+	process.stdout.write = string => {
+		out(string);
 
-		if (/1234 B/.test(str)) {
+		if (/1234 B/.test(string)) {
 			assert(true);
 			process.stdout.write = out;
-			cb();
+			callback();
 		}
 	};
 
@@ -114,13 +114,13 @@ it('should not show prettified size when `pretty` option is false', cb => {
 	stream.end();
 });
 
-it('should expose the total size', cb => {
+it('should expose the total size', callback => {
 	const stream = size();
 
 	stream.on('finish', () => {
 		assert.strictEqual(stream.size, 13);
 		assert.strictEqual(stream.prettySize, '13 B');
-		cb();
+		callback();
 	});
 
 	stream.write(new Vinyl({
@@ -131,14 +131,14 @@ it('should expose the total size', cb => {
 	stream.end();
 });
 
-it('should handle stream contents', cb => {
+it('should handle stream contents', callback => {
 	const contents = through();
 	const stream = size();
 
 	stream.on('finish', () => {
 		assert.strictEqual(stream.size, 100);
 		assert.strictEqual(stream.prettySize, '100 B');
-		cb();
+		callback();
 	});
 
 	stream.write(new Vinyl({
@@ -151,14 +151,14 @@ it('should handle stream contents', cb => {
 	stream.end();
 });
 
-it('should handle stream contents with `gzip` option', cb => {
+it('should handle stream contents with `gzip` option', callback => {
 	const contents = through();
 	const stream = size({gzip: true});
 
 	stream.on('finish', () => {
 		assert.strictEqual(stream.size, 33);
 		assert.strictEqual(stream.prettySize, '33 B');
-		cb();
+		callback();
 	});
 
 	stream.write(new Vinyl({

@@ -7,46 +7,47 @@ const prettyBytes = require('pretty-bytes');
 const StreamCounter = require('stream-counter');
 const gzipSize = require('gzip-size');
 
-module.exports = opts => {
-	opts = Object.assign({
+module.exports = options => {
+	options = {
 		pretty: true,
-		showTotal: true
-	}, opts);
+		showTotal: true,
+		...options
+	};
 
 	let totalSize = 0;
 	let fileCount = 0;
 
 	function log(what, size) {
-		let title = opts.title;
+		let {title} = options;
 		title = title ? chalk.cyan(title) + ' ' : '';
-		size = opts.pretty ? prettyBytes(size) : (size + ' B');
-		fancyLog(title + what + ' ' + chalk.magenta(size) + (opts.gzip ? chalk.gray(' (gzipped)') : ''));
+		size = options.pretty ? prettyBytes(size) : (size + ' B');
+		fancyLog(title + what + ' ' + chalk.magenta(size) + (options.gzip ? chalk.gray(' (gzipped)') : ''));
 	}
 
-	return through.obj((file, enc, cb) => {
+	return through.obj((file, encoding, callback) => {
 		if (file.isNull()) {
-			cb(null, file);
+			callback(null, file);
 			return;
 		}
 
-		const finish = (err, size) => {
-			if (err) {
-				cb(new PluginError('gulp-size', err));
+		const finish = (error, size) => {
+			if (error) {
+				callback(new PluginError('gulp-size', error));
 				return;
 			}
 
 			totalSize += size;
 
-			if (opts.showFiles === true && size > 0) {
+			if (options.showFiles === true && size > 0) {
 				log(chalk.blue(file.relative), size);
 			}
 
 			fileCount++;
-			cb(null, file);
+			callback(null, file);
 		};
 
 		if (file.isStream()) {
-			if (opts.gzip) {
+			if (options.gzip) {
 				file.contents.pipe(gzipSize.stream())
 					.on('error', finish)
 					.on('end', function () {
@@ -63,19 +64,25 @@ module.exports = opts => {
 			return;
 		}
 
-		if (opts.gzip) {
-			gzipSize(file.contents).then(size => finish(null, size)).catch(finish);
+		if (options.gzip) {
+			(async () => {
+				try {
+					finish(null, await gzipSize(file.contents));
+				} catch (error) {
+					finish(error);
+				}
+			})();
 		} else {
 			finish(null, file.contents.length);
 		}
-	}, function (cb) {
+	}, function (callback) {
 		this.size = totalSize;
 		this.prettySize = prettyBytes(totalSize);
 
-		if (!(fileCount === 1 && opts.showFiles) && totalSize > 0 && fileCount > 0 && opts.showTotal) {
+		if (!(fileCount === 1 && options.showFiles) && totalSize > 0 && fileCount > 0 && options.showTotal) {
 			log(chalk.green('all files'), totalSize);
 		}
 
-		cb();
+		callback();
 	});
 };
