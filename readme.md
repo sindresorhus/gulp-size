@@ -71,6 +71,13 @@ Default: `true`
 
 Displays the total of all files.
 
+##### passthrough
+
+Type: `boolean`<br>
+Default: `false`
+
+Disables output from gulp-size, values are left available to other Gulp plugins for use.
+
 ### size.size
 
 Type: `number`<br>

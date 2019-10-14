@@ -11,6 +11,7 @@ module.exports = options => {
 	options = {
 		pretty: true,
 		showTotal: true,
+    passthrough: false,
 		...options
 	};
 
@@ -21,7 +22,9 @@ module.exports = options => {
 		let {title} = options;
 		title = title ? chalk.cyan(title) + ' ' : '';
 		size = options.pretty ? prettyBytes(size) : (size + ' B');
-		fancyLog(title + what + ' ' + chalk.magenta(size) + (options.gzip ? chalk.gray(' (gzipped)') : ''));
+    if(options.passthrough === false) {
+      fancyLog(title + what + ' ' + chalk.magenta(size) + (options.gzip ? chalk.gray(' (gzipped)') : ''));
+    }
 	}
 
 	return through.obj((file, encoding, callback) => {
@@ -38,7 +41,7 @@ module.exports = options => {
 
 			totalSize += size;
 
-			if (options.showFiles === true && size > 0) {
+			if (options.showFiles === true && size > 0 && options.passthrough === false) {
 				log(chalk.blue(file.relative), size);
 			}
 
@@ -79,7 +82,7 @@ module.exports = options => {
 		this.size = totalSize;
 		this.prettySize = prettyBytes(totalSize);
 
-		if (!(fileCount === 1 && options.showFiles) && totalSize > 0 && fileCount > 0 && options.showTotal) {
+		if (!(fileCount === 1 && options.showFiles) && totalSize > 0 && fileCount > 0 && options.showTotal && options.passthrough === false) {
 			log(chalk.green('all files'), totalSize);
 		}
 
