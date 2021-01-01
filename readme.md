@@ -1,4 +1,4 @@
-# gulp-size [![Build Status](https://travis-ci.org/sindresorhus/gulp-size.svg?branch=master)](https://travis-ci.org/sindresorhus/gulp-size)
+# gulp-size
 
 > Display the size of your project
 
