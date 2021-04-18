@@ -48,7 +48,21 @@ Give it a title so it's possible to distinguish the output of multiple instances
 Type: `boolean`<br>
 Default: `false`
 
-Displays the gzipped size instead.
+Displays the gzipped size.
+
+##### brotli
+
+Type: `boolean`<br>
+Default: `false`
+
+Displays the brotli compressed size.
+
+##### uncompressed
+
+Type: `boolean`<br>
+Default: `false` if either of gzip or brotli is `true`, otherwise `true`
+
+Displays the uncompressed size.
 
 ##### pretty
 
