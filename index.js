@@ -17,31 +17,22 @@ module.exports = (options = {}) => {
 	};
 
 	let fileCount = 0;
-	const totalSize = {};
+	const totalSize = new Map();
+	const desc = {uncompressed: '', gzip: ' (gzipped)', brotli: (' (brotli)')};
 
 	function log(what, sizes) {
 		let {title} = options;
 		title = title ? chalk.cyan(title) + ' ' : '';
-		const desc = {uncompressed: '', gzip: ' (gzipped)', brotli: (' (brotli)')};
-		const strings = Object.entries(sizes).map(([k, v]) => {
-			const size = options.pretty ? prettyBytes(v) : (v + ' B');
-			return chalk.magenta(size) + chalk.gray(desc[k]);
+		const sizeStrings = [...sizes].map(([key, size]) => {
+			size = options.pretty ? prettyBytes(size) : (size + ' B');
+			return chalk.magenta(size) + chalk.gray(desc[key]);
 		});
 
-		fancyLog(title + what + ' ' + strings.join(chalk.magenta(', ')));
-	}
-
-	function addPropWise(a, b) {
-		// eslint-disable-next-line guard-for-in
-		for (const k in b) {
-			a[k] = (a[k] + b[k]) || b[k];
-		}
-
-		return a;
+		fancyLog(title + what + ' ' + sizeStrings.join(chalk.magenta(', ')));
 	}
 
 	function hasSize(sizes) {
-		return Object.values(sizes).some(a => a > 0);
+		return [...sizes.values()].some(size => size > 0);
 	}
 
 	function promisify(stream, property, event = 'end') {
@@ -57,16 +48,16 @@ module.exports = (options = {}) => {
 			return;
 		}
 
-		const finish = (error, size) => {
+		const finish = (error, sizes) => {
 			if (error) {
 				callback(new PluginError('gulp-size', error));
 				return;
 			}
 
-			addPropWise(totalSize, size);
+			sizes.forEach((size, key) => totalSize.set(key, size + (totalSize.get(key) || 0)));
 
-			if (options.showFiles === true && hasSize(size)) {
-				log(chalk.blue(file.relative), size);
+			if (options.showFiles === true && hasSize(sizes)) {
+				log(chalk.blue(file.relative), sizes);
 			}
 
 			fileCount++;
@@ -114,9 +105,9 @@ module.exports = (options = {}) => {
 			try {
 				const res = await Promise.all(calc);
 				// Name each result
-				const namedResult = {};
+				const namedResult = new Map();
 				for (const [idx, size] of res.entries()) {
-					namedResult[names[idx]] = size;
+					namedResult.set(names[idx], size);
 				}
 
 				finish(null, namedResult);
@@ -125,7 +116,7 @@ module.exports = (options = {}) => {
 			}
 		})();
 	}, function (callback) {
-		this.size = totalSize[Object.keys(totalSize)[0]];
+		this.size = totalSize.values().next().value;
 		this.prettySize = prettyBytes(this.size);
 		if (!(fileCount === 1 && options.showFiles) && hasSize(totalSize) && fileCount > 0 && options.showTotal) {
 			log(chalk.green('all files'), totalSize);
