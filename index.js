@@ -8,11 +8,11 @@ const StreamCounter = require('stream-counter');
 const gzipSize = require('gzip-size');
 const brotliSize = require('brotli-size');
 
-module.exports = options => {
+module.exports = (options = {}) => {
 	options = {
 		pretty: true,
 		showTotal: true,
-		uncompressed: !options || options.uncompressed || !(options.gzip || options.brotli),
+		uncompressed: options.uncompressed || !(options.gzip || options.brotli),
 		...options
 	};
 
@@ -95,8 +95,7 @@ module.exports = options => {
 
 		if (file.isBuffer()) {
 			if (options.uncompressed) {
-				// Shoehorning, because one size fits all
-				calc.push(new Promise(resolve => resolve(file.contents.length)));
+				calc.push(file.contents.length);
 				names.push('uncompressed');
 			}
 
@@ -113,10 +112,14 @@ module.exports = options => {
 
 		(async () => {
 			try {
-				finish(null, await Promise.all(calc).then(res => {
-					// Name each result
-					return res.reduce((acc, cur, idx) => ({...acc, [names[idx]]: cur}), {});
-				}));
+				const res = await Promise.all(calc);
+				// Name each result
+				const namedResult = {};
+				for (const [idx, size] of res.entries()) {
+					namedResult[names[idx]] = size;
+				}
+
+				finish(null, namedResult);
 			} catch (error) {
 				finish(error);
 			}
