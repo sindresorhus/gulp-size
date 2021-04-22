@@ -18,14 +18,13 @@ module.exports = (options = {}) => {
 
 	let fileCount = 0;
 	const totalSize = new Map();
-	const desc = {uncompressed: '', gzip: ' (gzipped)', brotli: (' (brotli)')};
 
 	function log(what, sizes) {
 		let {title} = options;
 		title = title ? chalk.cyan(title) + ' ' : '';
 		const sizeStrings = [...sizes].map(([key, size]) => {
 			size = options.pretty ? prettyBytes(size) : (size + ' B');
-			return chalk.magenta(size) + chalk.gray(desc[key]);
+			return chalk.magenta(size) + chalk.gray(key);
 		});
 
 		fancyLog(title + what + ' ' + sizeStrings.join(chalk.magenta(', ')));
@@ -54,7 +53,9 @@ module.exports = (options = {}) => {
 				return;
 			}
 
-			sizes.forEach((size, key) => totalSize.set(key, size + (totalSize.get(key) || 0)));
+			for (const [key, size] of sizes) {
+				totalSize.set(key, size + (totalSize.get(key) || 0));
+			}
 
 			if (options.showFiles === true && hasSize(sizes)) {
 				log(chalk.blue(file.relative), sizes);
@@ -64,53 +65,41 @@ module.exports = (options = {}) => {
 			callback(null, file);
 		};
 
-		const calc = [];
-		const names = [];
-
+		const selectedSizes = new Map();
 		if (file.isStream()) {
 			if (options.uncompressed) {
-				calc.push(promisify(file.contents.pipe(new StreamCounter()), 'bytes', 'finish'));
-				names.push('uncompressed');
+				selectedSizes.set('', promisify(file.contents.pipe(new StreamCounter()), 'bytes', 'finish'));
 			}
 
 			if (options.gzip) {
-				calc.push(promisify(file.contents.pipe(gzipSize.stream()), 'gzipSize'));
-				names.push('gzip');
+				selectedSizes.set(' (gzipped)', promisify(file.contents.pipe(gzipSize.stream()), 'gzipSize'));
 			}
 
 			if (options.brotli) {
-				calc.push(promisify(file.contents.pipe(brotliSize.stream()), 'brotliSize'));
-				names.push('brotli');
+				selectedSizes.set(' (brotli)', promisify(file.contents.pipe(brotliSize.stream()), 'brotliSize'));
 			}
 		}
 
 		if (file.isBuffer()) {
 			if (options.uncompressed) {
-				calc.push(file.contents.length);
-				names.push('uncompressed');
+				selectedSizes.set('', file.contents.length);
 			}
 
 			if (options.gzip) {
-				calc.push(gzipSize(file.contents));
-				names.push('gzip');
+				selectedSizes.set(' (gzipped)', gzipSize(file.contents));
 			}
 
 			if (options.brotli) {
-				calc.push(brotliSize.default(file.contents));
-				names.push('brotli');
+				selectedSizes.set(' (brotli)', brotliSize.default(file.contents));
 			}
 		}
 
 		(async () => {
 			try {
-				const res = await Promise.all(calc);
-				// Name each result
-				const namedResult = new Map();
-				for (const [idx, size] of res.entries()) {
-					namedResult.set(names[idx], size);
-				}
+				// We want to keep the names
+				const sizes = await Promise.all([...selectedSizes.entries()].map(async ([key, size]) => [key, await size]));
 
-				finish(null, namedResult);
+				finish(null, new Map(sizes));
 			} catch (error) {
 				finish(error);
 			}
