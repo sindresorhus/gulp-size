@@ -97,7 +97,7 @@ module.exports = (options = {}) => {
 		(async () => {
 			try {
 				// We want to keep the names
-				const sizes = await Promise.all([...selectedSizes.entries()].map(async ([key, size]) => [key, await size]));
+				const sizes = await Promise.all([...selectedSizes].map(async ([key, size]) => [key, await size]));
 
 				finish(null, new Map(sizes));
 			} catch (error) {
