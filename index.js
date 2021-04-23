@@ -8,6 +8,17 @@ const StreamCounter = require('stream-counter');
 const gzipSize = require('gzip-size');
 const brotliSize = require('brotli-size');
 
+function hasSize(sizes) {
+	return [...sizes.values()].some(size => size > 0);
+}
+
+function promisify(stream, property, event = 'end') {
+	return new Promise((resolve, reject) => {
+		stream.on(event, () => resolve(stream[property]));
+		stream.on('error', error => reject(error));
+	});
+}
+
 module.exports = (options = {}) => {
 	options = {
 		pretty: true,
@@ -19,26 +30,21 @@ module.exports = (options = {}) => {
 	let fileCount = 0;
 	const totalSize = new Map();
 
+	const description = new Map([
+		['uncompressed', ''],
+		['gzip', ' (gzipped)'],
+		['brotli', ' (brotli)']
+	]);
+
 	function log(what, sizes) {
 		let {title} = options;
 		title = title ? chalk.cyan(title) + ' ' : '';
 		const sizeStrings = [...sizes].map(([key, size]) => {
 			size = options.pretty ? prettyBytes(size) : (size + ' B');
-			return chalk.magenta(size) + chalk.gray(key);
+			return chalk.magenta(size) + chalk.gray(description.get(key));
 		});
 
 		fancyLog(title + what + ' ' + sizeStrings.join(chalk.magenta(', ')));
-	}
-
-	function hasSize(sizes) {
-		return [...sizes.values()].some(size => size > 0);
-	}
-
-	function promisify(stream, property, event = 'end') {
-		return new Promise((resolve, reject) => {
-			stream.on(event, () => resolve(stream[property]));
-			stream.on('error', error => reject(error));
-		});
 	}
 
 	return through.obj((file, encoding, callback) => {
@@ -68,29 +74,29 @@ module.exports = (options = {}) => {
 		const selectedSizes = new Map();
 		if (file.isStream()) {
 			if (options.uncompressed) {
-				selectedSizes.set('', promisify(file.contents.pipe(new StreamCounter()), 'bytes', 'finish'));
+				selectedSizes.set('uncompressed', promisify(file.contents.pipe(new StreamCounter()), 'bytes', 'finish'));
 			}
 
 			if (options.gzip) {
-				selectedSizes.set(' (gzipped)', promisify(file.contents.pipe(gzipSize.stream()), 'gzipSize'));
+				selectedSizes.set('gzip', promisify(file.contents.pipe(gzipSize.stream()), 'gzipSize'));
 			}
 
 			if (options.brotli) {
-				selectedSizes.set(' (brotli)', promisify(file.contents.pipe(brotliSize.stream()), 'brotliSize'));
+				selectedSizes.set('brotli', promisify(file.contents.pipe(brotliSize.stream()), 'brotliSize'));
 			}
 		}
 
 		if (file.isBuffer()) {
 			if (options.uncompressed) {
-				selectedSizes.set('', file.contents.length);
+				selectedSizes.set('uncompressed', file.contents.length);
 			}
 
 			if (options.gzip) {
-				selectedSizes.set(' (gzipped)', gzipSize(file.contents));
+				selectedSizes.set('gzip', gzipSize(file.contents));
 			}
 
 			if (options.brotli) {
-				selectedSizes.set(' (brotli)', brotliSize.default(file.contents));
+				selectedSizes.set('brotli', brotliSize.default(file.contents));
 			}
 		}
 
