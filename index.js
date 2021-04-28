@@ -14,8 +14,8 @@ function hasSize(sizes) {
 
 function promisify(stream, property, event = 'end') {
 	return new Promise((resolve, reject) => {
-		stream.on(event, () => resolve(stream[property]));
-		stream.on('error', error => reject(error));
+		stream.on(event, () => resolve(stream[property]))
+			.on('error', error => reject(error));
 	});
 }
 
@@ -47,7 +47,7 @@ module.exports = (options = {}) => {
 		fancyLog(title + what + ' ' + sizeStrings.join(chalk.magenta(', ')));
 	}
 
-	return through.obj((file, encoding, callback) => {
+	return through.obj(async (file, encoding, callback) => {
 		if (file.isNull()) {
 			callback(null, file);
 			return;
@@ -100,16 +100,14 @@ module.exports = (options = {}) => {
 			}
 		}
 
-		(async () => {
-			try {
-				// We want to keep the names
-				const sizes = await Promise.all([...selectedSizes].map(async ([key, size]) => [key, await size]));
+		try {
+			// We want to keep the names
+			const sizes = await Promise.all([...selectedSizes].map(async ([key, size]) => [key, await size]));
 
-				finish(null, new Map(sizes));
-			} catch (error) {
-				finish(error);
-			}
-		})();
+			finish(null, new Map(sizes));
+		} catch (error) {
+			finish(error);
+		}
 	}, function (callback) {
 		this.size = totalSize.values().next().value;
 		this.prettySize = prettyBytes(this.size);

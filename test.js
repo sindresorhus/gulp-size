@@ -92,6 +92,51 @@ it('should have `gzip` option', callback => {
 	stream.end();
 });
 
+it('should have `brotli` option', callback => {
+	const out = process.stdout.write.bind(process.stdout);
+	const stream = size({brotli: true});
+
+	process.stdout.write = string => {
+		out(string);
+
+		if (/brotli/.test(string)) {
+			assert(true);
+			process.stdout.write = out;
+			callback();
+		}
+	};
+
+	stream.write(new Vinyl({
+		path: path.join(__dirname, 'fixture.js'),
+		contents: Buffer.from('unicorn world')
+	}));
+
+	stream.end();
+});
+
+it('should show `uncompressed`, `gzip` and `brotli` size', callback => {
+	const out = process.stdout.write.bind(process.stdout);
+	const stream = size({uncompressed: true, gzip: true, brotli: true});
+
+	process.stdout.write = string => {
+		out(string);
+
+		// Name of compressions protocols and three numbers
+		if (/gzipped.*brotli/.test(string) && /(?:.*\b\d+){3}/.test(string)) {
+			assert(true);
+			process.stdout.write = out;
+			callback();
+		}
+	};
+
+	stream.write(new Vinyl({
+		path: path.join(__dirname, 'fixture.js'),
+		contents: Buffer.from('unicorn world')
+	}));
+
+	stream.end();
+});
+
 it('should not show prettified size when `pretty` option is false', callback => {
 	const out = process.stdout.write.bind(process.stdout);
 	const stream = size({pretty: false});
@@ -158,6 +203,26 @@ it('should handle stream contents with `gzip` option', callback => {
 	stream.on('finish', () => {
 		assert.strictEqual(stream.size, 33);
 		assert.strictEqual(stream.prettySize, '33 B');
+		callback();
+	});
+
+	stream.write(new Vinyl({
+		path: path.join(__dirname, 'fixture.js'),
+		contents
+	}));
+
+	contents.end(Buffer.from('unicorn world'));
+
+	stream.end();
+});
+
+it('should handle stream contents with `brotli` option', callback => {
+	const contents = through();
+	const stream = size({brotli: true});
+
+	stream.on('finish', () => {
+		assert.strictEqual(stream.size, 17);
+		assert.strictEqual(stream.prettySize, '17 B');
 		callback();
 	});
 
