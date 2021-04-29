@@ -47,7 +47,7 @@ module.exports = (options = {}) => {
 		fancyLog(title + what + ' ' + sizeStrings.join(chalk.magenta(', ')));
 	}
 
-	return through.obj(async (file, encoding, callback) => {
+	return through.obj((file, encoding, callback) => {
 		if (file.isNull()) {
 			callback(null, file);
 			return;
@@ -100,14 +100,16 @@ module.exports = (options = {}) => {
 			}
 		}
 
-		try {
-			// We want to keep the names
-			const sizes = await Promise.all([...selectedSizes].map(async ([key, size]) => [key, await size]));
+		(async () => {
+			try {
+				// We want to keep the names
+				const sizes = await Promise.all([...selectedSizes].map(async ([key, size]) => [key, await size]));
 
-			finish(null, new Map(sizes));
-		} catch (error) {
-			finish(error);
-		}
+				finish(null, new Map(sizes));
+			} catch (error) {
+				finish(error);
+			}
+		})();
 	}, function (callback) {
 		this.size = totalSize.values().next().value;
 		this.prettySize = prettyBytes(this.size);
