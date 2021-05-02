@@ -6,13 +6,11 @@
 
 Logs out the total size of files in the stream and optionally the individual file-sizes.
 
-
 ## Install
 
 ```
 $ npm install --save-dev gulp-size
 ```
-
 
 ## Usage
 
@@ -27,7 +25,6 @@ exports.default = () => (
 );
 ```
 
-
 ## API
 
 ### size(options?)
@@ -38,63 +35,63 @@ Type: `object`
 
 ##### title
 
-Type: `string`<br>
+Type: `string`\
 Default: `''`
 
 Give it a title so it's possible to distinguish the output of multiple instances logging at once.
 
 ##### gzip
 
-Type: `boolean`<br>
+Type: `boolean`\
 Default: `false`
 
 Displays the gzipped size.
 
 ##### brotli
 
-Type: `boolean`<br>
+Type: `boolean`\
 Default: `false`
 
 Displays the brotli compressed size.
 
 ##### uncompressed
 
-Type: `boolean`<br>
+Type: `boolean`\
 Default: `false` if either of gzip or brotli is `true`, otherwise `true`
 
 Displays the uncompressed size.
 
 ##### pretty
 
-Type: `boolean`<br>
+Type: `boolean`\
 Default: `true`
 
 Displays prettified size: `1337 B` → `1.34 kB`.
 
 ##### showFiles
 
-Type: `boolean`<br>
+Type: `boolean`\
 Default: `false`
 
 Displays the size of every file instead of just the total size.
 
 ##### showTotal
 
-Type: `boolean`<br>
+Type: `boolean`\
 Default: `true`
 
 Displays the total of all files.
 
 ### size.size
 
-Type: `number`<br>
+Type: `number`\
 Example: `12423000`
 
 The total size of all files in bytes.
 
 ### size.prettySize
 
-Type: `string`<br>
+Type: `string`\
 Example: `14 kB`
 
 Prettified version of `.size`.

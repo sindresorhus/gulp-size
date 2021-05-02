@@ -3,7 +3,7 @@ const path = require('path');
 const assert = require('assert');
 const Vinyl = require('vinyl');
 const through = require('through2');
-const size = require('.');
+const size = require('./index.js');
 
 it('should show the size of files in the stream', callback => {
 	const out = process.stdout.write.bind(process.stdout);
