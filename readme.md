@@ -96,7 +96,9 @@ Example: `14 kB`
 
 Prettified version of `.size`.
 
-Useful for, for example, reporting the total project size with [`gulp-notify`](https://github.com/mikaelbr/gulp-notify):
+#### Example
+
+You could, for example, use this to report the total project size with [`gulp-notify`](https://github.com/mikaelbr/gulp-notify):
 
 ```js
 const gulp = require('gulp');
