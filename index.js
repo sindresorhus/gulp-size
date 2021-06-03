@@ -111,7 +111,7 @@ module.exports = (options = {}) => {
 			}
 		})();
 	}, function (callback) {
-		this.size = totalSize.values().next().value;
+		this.size = totalSize.values().next().value || 0;
 		this.prettySize = prettyBytes(this.size);
 
 		if (!(fileCount === 1 && options.showFiles) && hasSize(totalSize) && fileCount > 0 && options.showTotal) {
