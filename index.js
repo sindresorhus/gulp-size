@@ -112,9 +112,7 @@ module.exports = (options = {}) => {
 		})();
 	}, function (callback) {
 		this.size = totalSize.values().next().value;
-		if (this.size) {
-			this.prettySize = prettyBytes(this.size);
-		}
+		this.prettySize = prettyBytes(this.size || 0);
 
 		if (!(fileCount === 1 && options.showFiles) && hasSize(totalSize) && fileCount > 0 && options.showTotal) {
 			log(chalk.green('all files'), totalSize);
