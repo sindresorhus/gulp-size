@@ -1,6 +1,6 @@
 {
 	"name": "gulp-size",
-	"version": "4.0.1",
+	"version": "5.0.0",
 	"description": "Display the size of your project",
 	"license": "MIT",
 	"repository": "sindresorhus/gulp-size",
