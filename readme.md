@@ -8,17 +8,17 @@ Logs out the total size of files in the stream and optionally the individual fil
 
 ## Install
 
-```
-$ npm install --save-dev gulp-size
+```sh
+npm install --save-dev gulp-size
 ```
 
 ## Usage
 
 ```js
-const gulp = require('gulp');
-const size = require('gulp-size');
+import gulp from 'gulp';
+import size from 'gulp-size';
 
-exports.default = () => (
+export default () => (
 	gulp.src('fixture.js')
 		.pipe(size())
 		.pipe(gulp.dest('dist'))
@@ -101,19 +101,21 @@ Prettified version of `.size`.
 You could, for example, use this to report the total project size with [`gulp-notify`](https://github.com/mikaelbr/gulp-notify):
 
 ```js
-const gulp = require('gulp');
-const size = require('gulp-size');
-const notify = require('gulp-notify');
+import gulp from 'gulp';
+import size from 'gulp-size';
+import notify from 'gulp-notify';
+
+export default () => (
 
 exports.default = () => {
-	const s = size();
+	const sizeInstance = size();
 
 	return gulp.src('fixture.js')
-		.pipe(s)
+		.pipe(sizeInstance)
 		.pipe(gulp.dest('dist'))
 		.pipe(notify({
 			onLast: true,
-			message: () => `Total size ${s.prettySize}`
+			message: () => `Total size ${sizeInstance.prettySize}`
 		}));
 };
 ```
